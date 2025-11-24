@@ -8,18 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    let viewModel: MoviesViewModel
+    let viewModel: MovieSearchViewModel
     
     init() {
-        // Setup the complete dependency chain
-        let datasource = MoviesRemoteDatasourceImpl(accessToken: Config.API.accessToken)
-        let repository = MoviesRepositoryImpl(remoteDatasource: datasource)
-        let useCase = SearchMoviesUseCaseImpl(repository: repository)
-        self.viewModel = MoviesViewModel(searchMoviesUseCase: useCase)
+        self.viewModel = DependencyContainer.shared.makeMoviesViewModel()
     }
     
     var body: some View {
-        MoviesView(viewModel: viewModel)
+        MovieSearchView(viewModel: viewModel)
     }
 }
 

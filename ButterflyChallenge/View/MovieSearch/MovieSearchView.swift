@@ -1,5 +1,5 @@
 //
-//  MoviesView.swift
+//  MovieSearchView.swift
 //  ButterflyChallenge
 //
 //  Created by Francisco Rosso on 24/11/2025.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct MoviesView: View {
-    @State private var viewModel: MoviesViewModel
+struct MovieSearchView: View {
+    @State private var viewModel: MovieSearchViewModel
     
-    init(viewModel: MoviesViewModel) {
+    init(viewModel: MovieSearchViewModel) {
         self.viewModel = viewModel
     }
     
@@ -60,12 +60,14 @@ struct MoviesView: View {
         List {
             Section {
                 ForEach(viewModel.movies) { movie in
-                    MovieRowView(movie: movie)
-                        .onAppear {
-                            Task {
-                                await viewModel.loadMoreMoviesIfNeeded(movie)
+                    NavigationLink(value: movie.id) {
+                        MovieRowView(movie: movie)
+                            .onAppear {
+                                Task {
+                                    await viewModel.loadMoreMoviesIfNeeded(movie)
+                                }
                             }
-                        }
+                    }
                 }
                 
                 if viewModel.isLoadingMore {
@@ -89,6 +91,10 @@ struct MoviesView: View {
                         .padding(.top, 8)
                 }
             }
+        }
+        .navigationDestination(for: Int.self) { movieId in
+            let detailViewModel = DependencyContainer.shared.makeMovieDetailViewModel(movieId: movieId)
+            MovieDetailView(viewModel: detailViewModel)
         }
     }
 }
@@ -115,11 +121,11 @@ struct MoviesView: View {
     let mockDatasource = MoviesRemoteDatasourceImpl(accessToken: "mock_token")
     let mockRepository = MoviesRepositoryImpl(remoteDatasource: mockDatasource)
     let mockUseCase = SearchMoviesUseCaseImpl(repository: mockRepository)
-    let viewModel = MoviesViewModel(searchMoviesUseCase: mockUseCase)
-    
+    let viewModel = MovieSearchViewModel(searchMoviesUseCase: mockUseCase)
+
     // Set some test data
     viewModel.movies = [mockMovie]
     viewModel.totalResults = 1
     
-    return MoviesView(viewModel: viewModel)
+    return MovieSearchView(viewModel: viewModel)
 }

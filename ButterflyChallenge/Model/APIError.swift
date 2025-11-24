@@ -13,6 +13,7 @@ enum MoviesDatasourceError: Error {
     case invalidURL
     case invalidResponse
     case unauthorized
+    case notFound
     case serverError(statusCode: Int)
     case decodingError(Error)
     case networkError(Error)
@@ -25,6 +26,8 @@ enum MoviesDatasourceError: Error {
             return "Invalid response from server"
         case .unauthorized:
             return "Unauthorized - check your API token"
+        case .notFound:
+            return "Movie not found"
         case .serverError(let statusCode):
             return "Server error with status code: \(statusCode)"
         case .decodingError(let error):

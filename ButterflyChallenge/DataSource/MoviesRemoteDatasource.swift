@@ -11,6 +11,7 @@ import Foundation
 
 protocol MoviesDatasource {
     func searchMovies(query: String, page: Int) async throws -> MovieSearchResponse
+    func getMovieDetail(movieId: Int) async throws -> MovieDetail
 }
 
 // MARK: - Implementation
@@ -61,6 +62,44 @@ final class MoviesRemoteDatasourceImpl: MoviesDatasource {
                 }
             case 401:
                 throw MoviesDatasourceError.unauthorized
+            default:
+                throw MoviesDatasourceError.serverError(statusCode: httpResponse.statusCode)
+            }
+        } catch let error as MoviesDatasourceError {
+            throw error
+        } catch {
+            throw MoviesDatasourceError.networkError(error)
+        }
+    }
+    
+    func getMovieDetail(movieId: Int) async throws -> MovieDetail {
+        let url = URL(string: "\(Constants.API.movieDetail)/\(movieId)")!
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        do {
+            let (data, response) = try await session.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw MoviesDatasourceError.invalidResponse
+            }
+            
+            switch httpResponse.statusCode {
+            case 200...299:
+                do {
+                    let decoder = JSONDecoder()
+                    let movieDetail = try decoder.decode(MovieDetail.self, from: data)
+                    return movieDetail
+                } catch {
+                    throw MoviesDatasourceError.decodingError(error)
+                }
+            case 401:
+                throw MoviesDatasourceError.unauthorized
+            case 404:
+                throw MoviesDatasourceError.notFound
             default:
                 throw MoviesDatasourceError.serverError(statusCode: httpResponse.statusCode)
             }

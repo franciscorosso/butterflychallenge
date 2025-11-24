@@ -12,5 +12,6 @@ enum Constants {
         static let baseURL = "https://api.themoviedb.org/3"
         
         static let searchMovie = "\(baseURL)/search/movie"
+        static let movieDetail = "\(baseURL)/movie"
     }
 }

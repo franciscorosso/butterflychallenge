@@ -9,7 +9,7 @@ import Foundation
 import Observation
 
 @Observable
-final class MoviesViewModel {
+final class MovieSearchViewModel {
     private let searchMoviesUseCase: SearchMoviesUseCase
     private var searchTask: Task<Void, Never>?
     private var loadMoreTask: Task<Void, Never>?
@@ -57,10 +57,7 @@ final class MoviesViewModel {
                     return
                 }
                 
-                movies = response.results
-                currentPage = response.page
-                totalPages = response.totalPages
-                totalResults = response.totalResults
+                applySearchResponse(response)
             } catch let error as MoviesDatasourceError {
                 errorMessage = error.errorDescription
                 movies = []
@@ -117,10 +114,7 @@ final class MoviesViewModel {
                     return
                 }
                 
-                movies.append(contentsOf: response.results)
-                currentPage = response.page
-                totalPages = response.totalPages
-                totalResults = response.totalResults
+                applySearchResponse(response)
             } catch let error as MoviesDatasourceError {
                 errorMessage = error.errorDescription
             } catch {
@@ -130,4 +124,18 @@ final class MoviesViewModel {
             isLoadingMore = false
         }
     }
+
+    @MainActor
+    private func applySearchResponse(_ response: MovieSearchResponse) {
+        if response.page == 1 {
+            movies = response.results
+        } else {
+            movies.append(contentsOf: response.results)
+        }
+
+        currentPage = response.page
+        totalPages = response.totalPages
+        totalResults = response.totalResults
+    }
+
 }
