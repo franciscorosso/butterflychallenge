@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Protocol
 
 protocol MoviesDatasource {
-    func searchMovies(query: String) async throws -> MovieSearchResponse
+    func searchMovies(query: String, page: Int) async throws -> MovieSearchResponse
 }
 
 // MARK: - Implementation
@@ -24,13 +24,14 @@ final class MoviesRemoteDatasourceImpl: MoviesDatasource {
         self.session = session
     }
     
-    func searchMovies(query: String) async throws -> MovieSearchResponse {
+    func searchMovies(query: String, page: Int = 1) async throws -> MovieSearchResponse {
         guard var urlComponents = URLComponents(string: "\(Constants.API.searchMovie)") else {
             throw MoviesDatasourceError.invalidURL
         }
         
         urlComponents.queryItems = [
-            URLQueryItem(name: "query", value: query)
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "page", value: String(page))
         ]
         
         guard let url = urlComponents.url else {

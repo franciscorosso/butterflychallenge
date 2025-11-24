@@ -12,10 +12,12 @@ import Observation
 final class MoviesViewModel {
     private let searchMoviesUseCase: SearchMoviesUseCase
     private var searchTask: Task<Void, Never>?
+    private var loadMoreTask: Task<Void, Never>?
     
     var movies: [Movie] = []
     var searchQuery: String = ""
     var isLoading: Bool = false
+    var isLoadingMore: Bool = false
     var errorMessage: String?
     var currentPage: Int = 0
     var totalPages: Int = 0
@@ -23,6 +25,10 @@ final class MoviesViewModel {
     
     init(searchMoviesUseCase: SearchMoviesUseCase) {
         self.searchMoviesUseCase = searchMoviesUseCase
+    }
+    
+    var canLoadMore: Bool {
+        return currentPage < totalPages && !isLoading && !isLoadingMore
     }
     
     @MainActor
@@ -44,7 +50,7 @@ final class MoviesViewModel {
             errorMessage = nil
             
             do {
-                let response = try await searchMoviesUseCase.execute(query: searchQuery)
+                let response = try await searchMoviesUseCase.execute(query: searchQuery, page: 1)
 
                 guard !Task.isCancelled else {
                     isLoading = false
@@ -71,11 +77,57 @@ final class MoviesViewModel {
 
     @MainActor
     func clearSearch() {
+        searchTask?.cancel()
+        loadMoreTask?.cancel()
         searchQuery = ""
         movies = []
         errorMessage = nil
         currentPage = 0
         totalPages = 0
         totalResults = 0
+        isLoading = false
+        isLoadingMore = false
+    }
+    
+    @MainActor
+    func loadMoreMoviesIfNeeded(_ movie: Movie) async {
+        guard movie.id == movies.last?.id else { return }
+        await loadMoreMovies()
+    }
+
+    @MainActor
+    private func loadMoreMovies() async {
+        guard canLoadMore else { return }
+        
+        // Prevent multiple simultaneous load more requests
+        guard loadMoreTask == nil || loadMoreTask?.isCancelled == true else { return }
+        
+        isLoadingMore = true
+        errorMessage = nil
+        
+        loadMoreTask = Task {
+            defer { loadMoreTask = nil }
+            
+            do {
+                let nextPage = currentPage + 1
+                let response = try await searchMoviesUseCase.execute(query: searchQuery, page: nextPage)
+                
+                guard !Task.isCancelled else {
+                    isLoadingMore = false
+                    return
+                }
+                
+                movies.append(contentsOf: response.results)
+                currentPage = response.page
+                totalPages = response.totalPages
+                totalResults = response.totalResults
+            } catch let error as MoviesDatasourceError {
+                errorMessage = error.errorDescription
+            } catch {
+                errorMessage = "An unexpected error occurred: \(error.localizedDescription)"
+            }
+            
+            isLoadingMore = false
+        }
     }
 }

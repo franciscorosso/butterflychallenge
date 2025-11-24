@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Protocol
 
 protocol SearchMoviesUseCase {
-    func execute(query: String) async throws -> MovieSearchResponse
+    func execute(query: String, page: Int) async throws -> MovieSearchResponse
 }
 
 // MARK: - Implementation
@@ -22,12 +22,11 @@ final class SearchMoviesUseCaseImpl: SearchMoviesUseCase {
         self.repository = repository
     }
     
-    func execute(query: String) async throws -> MovieSearchResponse {
-        // Validate query before calling repository
+    func execute(query: String, page: Int = 1) async throws -> MovieSearchResponse {
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
             throw MoviesDatasourceError.invalidURL
         }
         
-        return try await repository.searchMovies(query: query)
+        return try await repository.searchMovies(query: query, page: page)
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Protocol
 
 protocol MoviesRepository {
-    func searchMovies(query: String) async throws -> MovieSearchResponse
+    func searchMovies(query: String, page: Int) async throws -> MovieSearchResponse
 }
 
 // MARK: - Implementation
@@ -22,7 +22,7 @@ final class MoviesRepositoryImpl: MoviesRepository {
         self.remoteDatasource = remoteDatasource
     }
     
-    func searchMovies(query: String) async throws -> MovieSearchResponse {
-        return try await remoteDatasource.searchMovies(query: query)
+    func searchMovies(query: String, page: Int = 1) async throws -> MovieSearchResponse {
+        return try await remoteDatasource.searchMovies(query: query, page: page)
     }
 }

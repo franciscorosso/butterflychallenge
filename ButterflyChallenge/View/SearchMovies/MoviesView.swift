@@ -61,10 +61,32 @@ struct MoviesView: View {
             Section {
                 ForEach(viewModel.movies) { movie in
                     MovieRowView(movie: movie)
+                        .onAppear {
+                            Task {
+                                await viewModel.loadMoreMoviesIfNeeded(movie)
+                            }
+                        }
+                }
+                
+                if viewModel.isLoadingMore {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                            .padding()
+                        Spacer()
+                    }
                 }
             } header: {
                 if viewModel.totalResults > 0 {
                     Text("Found \(viewModel.totalResults) results")
+                }
+            } footer: {
+                if viewModel.currentPage == viewModel.totalPages && viewModel.totalPages > 0 {
+                    Text("End of results")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 8)
                 }
             }
         }
