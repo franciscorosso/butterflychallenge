@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		25C45D782ED4B0B20012F463 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 25C45D772ED4B0B20012F463 /* Swinject */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		2571AF132ED47BAF00318915 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25C45D782ED4B0B20012F463 /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 				2571AF072ED47BAE00318915 /* ButterflyChallenge */,
 				2571AF152ED47BAF00318915 /* ButterflyChallengeTests */,
 				2571AF1F2ED47BAF00318915 /* ButterflyChallengeUITests */,
+				25C45D762ED4B0B20012F463 /* Frameworks */,
 				2571AF062ED47BAE00318915 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +96,13 @@
 				2571AF1C2ED47BAF00318915 /* ButterflyChallengeUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		25C45D762ED4B0B20012F463 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +125,7 @@
 			);
 			name = ButterflyChallenge;
 			packageProductDependencies = (
+				25C45D772ED4B0B20012F463 /* Swinject */,
 			);
 			productName = ButterflyChallenge;
 			productReference = 2571AF052ED47BAE00318915 /* ButterflyChallenge.app */;
@@ -592,6 +606,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		25C45D772ED4B0B20012F463 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2571AF612ED47EB900318915 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2571AEFD2ED47BAE00318915 /* Project object */;
 }

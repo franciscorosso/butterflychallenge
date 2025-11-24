@@ -25,6 +25,10 @@ final class AppAssembly: Assembly {
             return MoviesRemoteDatasourceImpl(accessToken: accessToken)
         }.inObjectScope(.container) // Singleton
         
+        container.register(FavoritesDataSource.self) { _ in
+            return FavoritesDataSourceImpl()
+        }.inObjectScope(.container) // Singleton
+        
         // MARK: - Repository Layer
         
         container.register(MoviesRepository.self) { resolver in
@@ -34,9 +38,9 @@ final class AppAssembly: Assembly {
         
         // MARK: - Use Cases
         
-        container.register(SearchMoviesUseCase.self) { resolver in
+        container.register(MovieSearchUseCase.self) { resolver in
             let repository = resolver.resolve(MoviesRepository.self)!
-            return SearchMoviesUseCaseImpl(repository: repository)
+            return MovieSearchUseCaseImpl(repository: repository)
         }
         
         container.register(GetMovieDetailUseCase.self) { resolver in
@@ -44,17 +48,35 @@ final class AppAssembly: Assembly {
             return GetMovieDetailUseCaseImpl(repository: repository)
         }
         
+        container.register(GetFavoritesUseCase.self) { resolver in
+            let dataSource = resolver.resolve(FavoritesDataSource.self)!
+            return GetFavoritesUseCaseImpl(favoritesDataSource: dataSource)
+        }
+        
+        container.register(ToggleFavoriteUseCase.self) { resolver in
+            let dataSource = resolver.resolve(FavoritesDataSource.self)!
+            return ToggleFavoriteUseCaseImpl(favoritesDataSource: dataSource)
+        }
+        
         // MARK: - View Models
         
         container.register(MovieSearchViewModel.self) { resolver in
-            let useCase = resolver.resolve(SearchMoviesUseCase.self)!
-            return MovieSearchViewModel(searchMoviesUseCase: useCase)
+            let searchUseCase = resolver.resolve(MovieSearchUseCase.self)!
+            let toggleFavoriteUseCase = resolver.resolve(ToggleFavoriteUseCase.self)!
+            return MovieSearchViewModel(searchMoviesUseCase: searchUseCase, toggleFavoriteUseCase: toggleFavoriteUseCase)
+        }
+        
+        container.register(FavoritesViewModel.self) { resolver in
+            let getFavoritesUseCase = resolver.resolve(GetFavoritesUseCase.self)!
+            let toggleFavoriteUseCase = resolver.resolve(ToggleFavoriteUseCase.self)!
+            return FavoritesViewModel(getFavoritesUseCase: getFavoritesUseCase, toggleFavoriteUseCase: toggleFavoriteUseCase)
         }
         
         // Factory for MovieDetailViewModel since it requires a parameter
         container.register(MovieDetailViewModel.self) { (resolver, movieId: Int) in
-            let useCase = resolver.resolve(GetMovieDetailUseCase.self)!
-            return MovieDetailViewModel(movieId: movieId, getMovieDetailUseCase: useCase)
+            let getMovieDetailUseCase = resolver.resolve(GetMovieDetailUseCase.self)!
+            let toggleFavoriteUseCase = resolver.resolve(ToggleFavoriteUseCase.self)!
+            return MovieDetailViewModel(movieId: movieId, getMovieDetailUseCase: getMovieDetailUseCase, toggleFavoriteUseCase: toggleFavoriteUseCase)
         }
     }
 }

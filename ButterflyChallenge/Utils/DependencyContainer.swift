@@ -39,6 +39,13 @@ final class DependencyContainer {
         return viewModel
     }
     
+    func makeFavoritesViewModel() -> FavoritesViewModel {
+        guard let viewModel = resolver.resolve(FavoritesViewModel.self) else {
+            fatalError("FavoritesViewModel not registered in container")
+        }
+        return viewModel
+    }
+    
     func makeMovieDetailViewModel(movieId: Int) -> MovieDetailViewModel {
         guard let viewModel = resolver.resolve(MovieDetailViewModel.self, argument: movieId) else {
             fatalError("MovieDetailViewModel not registered in container")

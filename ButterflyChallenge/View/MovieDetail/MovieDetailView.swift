@@ -40,6 +40,17 @@ struct MovieDetailView: View {
         .task {
             await viewModel.loadMovieDetail()
         }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    viewModel.toggleFavorite()
+                } label: {
+                    Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                        .foregroundStyle(viewModel.isFavorite ? .pink : .blue)
+                }
+                .disabled(viewModel.movieDetail == nil)
+            }
+        }
     }
     
     @ViewBuilder
@@ -252,48 +263,5 @@ struct MovieDetailView: View {
                 }
             }
         }
-    }
-}
-
-#Preview {
-    let mockMovie = MovieDetail(
-        id: 550,
-        title: "Fight Club",
-        overview: "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy.",
-        posterPath: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-        backdropPath: "/hZkgoQYus5vegHoetLkCJzb17zJ.jpg",
-        releaseDate: "1999-10-15",
-        voteAverage: 8.433,
-        voteCount: 26279,
-        popularity: 73.433,
-        runtime: 139,
-        budget: 63000000,
-        revenue: 100853753,
-        status: "Released",
-        tagline: "Mischief. Mayhem. Soap.",
-        adult: false,
-        video: false,
-        originalLanguage: "en",
-        originalTitle: "Fight Club",
-        genres: [
-            Genre(id: 18, name: "Drama"),
-            Genre(id: 53, name: "Thriller"),
-            Genre(id: 35, name: "Comedy")
-        ],
-        productionCompanies: [
-            ProductionCompany(id: 508, name: "Regency Enterprises", logoPath: nil, originCountry: "US"),
-            ProductionCompany(id: 711, name: "Fox 2000 Pictures", logoPath: nil, originCountry: "US")
-        ],
-        homepage: "http://www.foxmovies.com/movies/fight-club"
-    )
-    
-    let mockDatasource = MoviesRemoteDatasourceImpl(accessToken: "mock_token")
-    let mockRepository = MoviesRepositoryImpl(remoteDatasource: mockDatasource)
-    let mockUseCase = GetMovieDetailUseCaseImpl(repository: mockRepository)
-    let viewModel = MovieDetailViewModel(movieId: 550, getMovieDetailUseCase: mockUseCase)
-    viewModel.movieDetail = mockMovie
-    
-    return NavigationStack {
-        MovieDetailView(viewModel: viewModel)
     }
 }

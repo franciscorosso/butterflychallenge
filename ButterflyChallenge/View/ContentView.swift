@@ -8,14 +8,26 @@
 import SwiftUI
 
 struct ContentView: View {
-    let viewModel: MovieSearchViewModel
+    let searchViewModel: MovieSearchViewModel
+    let favoritesViewModel: FavoritesViewModel
     
     init() {
-        self.viewModel = DependencyContainer.shared.makeMoviesViewModel()
+        self.searchViewModel = DependencyContainer.shared.makeMoviesViewModel()
+        self.favoritesViewModel = DependencyContainer.shared.makeFavoritesViewModel()
     }
     
     var body: some View {
-        MovieSearchView(viewModel: viewModel)
+        TabView {
+            MovieSearchView(viewModel: searchViewModel)
+                .tabItem {
+                    Label("tab.search".localized(), systemImage: "magnifyingglass")
+                }
+            
+            FavoritesView(viewModel: favoritesViewModel)
+                .tabItem {
+                    Label("tab.favorites".localized(), systemImage: "heart.fill")
+                }
+        }
     }
 }
 

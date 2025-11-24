@@ -9,13 +9,13 @@ import Foundation
 
 // MARK: - Protocol
 
-protocol SearchMoviesUseCase {
+protocol MovieSearchUseCase {
     func execute(query: String, page: Int) async throws -> MovieSearchResponse
 }
 
 // MARK: - Implementation
 
-final class SearchMoviesUseCaseImpl: SearchMoviesUseCase {
+final class MovieSearchUseCaseImpl: MovieSearchUseCase {
     private let repository: MoviesRepository
     
     init(repository: MoviesRepository) {

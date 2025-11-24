@@ -68,6 +68,20 @@ struct MovieSearchView: View {
                                 }
                             }
                     }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        let _ = viewModel.favoritesVersion
+                        Button {
+                            withAnimation {
+                                viewModel.toggleFavorite(movie)
+                            }
+                        } label: {
+                            Label(
+                                viewModel.isFavorite(movieId: movie.id) ? "favorites.remove".localized() : "favorites.add".localized(),
+                                systemImage: viewModel.isFavorite(movieId: movie.id) ? "heart.fill" : "heart"
+                            )
+                        }
+                        .tint(viewModel.isFavorite(movieId: movie.id) ? .pink : .blue)
+                    }
                 }
                 
                 if viewModel.isLoadingMore {
@@ -97,35 +111,4 @@ struct MovieSearchView: View {
             MovieDetailView(viewModel: detailViewModel)
         }
     }
-}
-
-#Preview {
-    let mockMovie = Movie(
-        id: 550,
-        title: "Fight Club",
-        overview: "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy.",
-        posterPath: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-        backdropPath: "/hZkgoQYus5vegHoetLkCJzb17zJ.jpg",
-        releaseDate: "1999-10-15",
-        voteAverage: 8.433,
-        voteCount: 26279,
-        popularity: 73.433,
-        adult: false,
-        video: false,
-        originalLanguage: "en",
-        originalTitle: "Fight Club",
-        genreIds: [18, 53, 35]
-    )
-    
-    // Create mock dependencies
-    let mockDatasource = MoviesRemoteDatasourceImpl(accessToken: "mock_token")
-    let mockRepository = MoviesRepositoryImpl(remoteDatasource: mockDatasource)
-    let mockUseCase = SearchMoviesUseCaseImpl(repository: mockRepository)
-    let viewModel = MovieSearchViewModel(searchMoviesUseCase: mockUseCase)
-
-    // Set some test data
-    viewModel.movies = [mockMovie]
-    viewModel.totalResults = 1
-    
-    return MovieSearchView(viewModel: viewModel)
 }

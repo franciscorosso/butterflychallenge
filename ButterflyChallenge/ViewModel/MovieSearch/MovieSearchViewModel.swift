@@ -10,7 +10,8 @@ import Observation
 
 @Observable
 final class MovieSearchViewModel {
-    private let searchMoviesUseCase: SearchMoviesUseCase
+    private let searchMoviesUseCase: MovieSearchUseCase
+    private let toggleFavoriteUseCase: ToggleFavoriteUseCase
     private var searchTask: Task<Void, Never>?
     private var loadMoreTask: Task<Void, Never>?
     
@@ -22,15 +23,38 @@ final class MovieSearchViewModel {
     var currentPage: Int = 0
     var totalPages: Int = 0
     var totalResults: Int = 0
-    
-    init(searchMoviesUseCase: SearchMoviesUseCase) {
-        self.searchMoviesUseCase = searchMoviesUseCase
-    }
-    
+    var favoritesVersion: Int = 0
     var canLoadMore: Bool {
-        return currentPage < totalPages && !isLoading && !isLoadingMore
+        currentPage < totalPages && !isLoading && !isLoadingMore
+    }
+
+    init(searchMoviesUseCase: MovieSearchUseCase, toggleFavoriteUseCase: ToggleFavoriteUseCase) {
+        self.searchMoviesUseCase = searchMoviesUseCase
+        self.toggleFavoriteUseCase = toggleFavoriteUseCase
+        
+        // Listen for favorite changes from other view models
+        NotificationCenter.default.addObserver(
+            forName: .favoritesDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.favoritesVersion += 1
+        }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .favoritesDidChange, object: nil)
+    }
+    
+    func isFavorite(movieId: Int) -> Bool {
+        return toggleFavoriteUseCase.isFavorite(movieId: movieId)
+    }
+    
+    func toggleFavorite(_ movie: Movie) {
+        let favoriteMovie = FavoriteMovie(from: movie)
+        toggleFavoriteUseCase.execute(movie: favoriteMovie)
+    }
+
     @MainActor
     func searchMovies() async {
         searchTask?.cancel()
@@ -137,5 +161,4 @@ final class MovieSearchViewModel {
         totalPages = response.totalPages
         totalResults = response.totalResults
     }
-
 }
