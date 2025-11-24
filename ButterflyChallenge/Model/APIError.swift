@@ -21,19 +21,19 @@ enum MoviesDatasourceError: Error {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "Invalid URL"
+            return "error.invalid_url".localized()
         case .invalidResponse:
-            return "Invalid response from server"
+            return "error.invalid_response".localized()
         case .unauthorized:
-            return "Unauthorized - check your API token"
+            return "error.unauthorized".localized()
         case .notFound:
-            return "Movie not found"
+            return "error.not_found".localized()
         case .serverError(let statusCode):
-            return "Server error with status code: \(statusCode)"
+            return "error.server_error".localized(with: statusCode)
         case .decodingError(let error):
-            return "Failed to decode response: \(error.localizedDescription)"
+            return "error.decoding_error".localized(with: error.localizedDescription)
         case .networkError(let error):
-            return "Network error: \(error.localizedDescription)"
+            return "error.network_error".localized(with: error.localizedDescription)
         }
     }
 }

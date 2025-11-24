@@ -38,7 +38,7 @@ final class MovieDetailViewModel {
         } catch let error as MoviesDatasourceError {
             errorMessage = error.errorDescription
         } catch {
-            errorMessage = "An unexpected error occurred: \(error.localizedDescription)"
+            errorMessage = "error.unexpected".localized(with: error.localizedDescription)
         }
         
         isLoading = false

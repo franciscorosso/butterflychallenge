@@ -1,0 +1,43 @@
+/* 
+  Localizable.strings
+  ButterflyChallenge
+  
+  Created by Francisco Rosso on 24/11/2025.
+*/
+
+// MARK: - General
+"general.error" = "Error";
+"general.retry" = "Retry";
+"general.loading" = "Loading...";
+
+// MARK: - Movie Search
+"movie_search.title" = "Movie Search";
+"movie_search.search_prompt" = "Search for movies...";
+"movie_search.searching" = "Searching...";
+"movie_search.empty.title" = "Search Movies";
+"movie_search.empty.description" = "Enter a movie title to start searching";
+"movie_search.results_count" = "Found %d results";
+"movie_search.end_of_results" = "End of results";
+
+// MARK: - Movie Detail
+"movie_detail.overview" = "Overview";
+"movie_detail.details" = "Details";
+"movie_detail.budget" = "Budget";
+"movie_detail.revenue" = "Revenue";
+"movie_detail.status" = "Status";
+"movie_detail.release_date" = "Release Date";
+"movie_detail.original_language" = "Original Language";
+"movie_detail.genres" = "Genres";
+"movie_detail.production_companies" = "Production Companies";
+"movie_detail.runtime.hours_minutes" = "%1$sh %2$sm";
+"movie_detail.runtime.minutes" = "%dm";
+
+// MARK: - Errors
+"error.invalid_url" = "Invalid URL";
+"error.invalid_response" = "Invalid response from server";
+"error.unauthorized" = "Unauthorized - check your API token";
+"error.not_found" = "Movie not found";
+"error.server_error" = "Server error with status code: %d";
+"error.decoding_error" = "Failed to decode response: %@";
+"error.network_error" = "Network error: %@";
+"error.unexpected" = "An unexpected error occurred: %@";

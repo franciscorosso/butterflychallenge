@@ -18,11 +18,11 @@ struct MovieSearchView: View {
         NavigationStack {
             VStack {
                 if viewModel.isLoading {
-                    ProgressView("Searching...")
+                    ProgressView("movie_search.searching".localized())
                         .padding()
                 } else if let errorMessage = viewModel.errorMessage {
                     ContentUnavailableView(
-                        "Error",
+                        "general.error".localized(),
                         systemImage: "exclamationmark.triangle",
                         description: Text(errorMessage)
                     )
@@ -30,18 +30,18 @@ struct MovieSearchView: View {
                     ContentUnavailableView.search
                 } else if viewModel.movies.isEmpty {
                     ContentUnavailableView(
-                        "Search Movies",
+                        "movie_search.empty.title".localized(),
                         systemImage: "film",
-                        description: Text("Enter a movie title to start searching")
+                        description: Text("movie_search.empty.description".localized())
                     )
                 } else {
                     moviesList
                 }
             }
-            .navigationTitle("Movie Search")
+            .navigationTitle("movie_search.title".localized())
             .searchable(
                 text: $viewModel.searchQuery,
-                prompt: "Search for movies..."
+                prompt: "movie_search.search_prompt".localized()
             )
             .onChange(of: viewModel.searchQuery) {
                 Task {
@@ -80,11 +80,11 @@ struct MovieSearchView: View {
                 }
             } header: {
                 if viewModel.totalResults > 0 {
-                    Text("Found \(viewModel.totalResults) results")
+                    Text("movie_search.results_count".localized(with: viewModel.totalResults))
                 }
             } footer: {
                 if viewModel.currentPage == viewModel.totalPages && viewModel.totalPages > 0 {
-                    Text("End of results")
+                    Text("movie_search.end_of_results".localized())
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)

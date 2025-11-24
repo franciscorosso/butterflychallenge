@@ -62,7 +62,7 @@ final class MovieSearchViewModel {
                 errorMessage = error.errorDescription
                 movies = []
             } catch {
-                errorMessage = "An unexpected error occurred: \(error.localizedDescription)"
+                errorMessage = "error.unexpected".localized(with: error.localizedDescription)
                 movies = []
             }
             
@@ -118,7 +118,7 @@ final class MovieSearchViewModel {
             } catch let error as MoviesDatasourceError {
                 errorMessage = error.errorDescription
             } catch {
-                errorMessage = "An unexpected error occurred: \(error.localizedDescription)"
+                errorMessage = "error.unexpected".localized(with: error.localizedDescription)
             }
             
             isLoadingMore = false

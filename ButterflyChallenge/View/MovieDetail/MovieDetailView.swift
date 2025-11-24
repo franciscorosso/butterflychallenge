@@ -17,16 +17,16 @@ struct MovieDetailView: View {
     var body: some View {
         ZStack {
             if viewModel.isLoading {
-                ProgressView("Loading...")
+                ProgressView("general.loading".localized())
             } else if let errorMessage = viewModel.errorMessage {
                 ContentUnavailableView(
-                    "Error",
+                    "general.error".localized(),
                     systemImage: "exclamationmark.triangle",
                     description: Text(errorMessage)
                 )
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
-                        Button("Retry") {
+                        Button("general.retry".localized()) {
                             Task {
                                 await viewModel.retry()
                             }
@@ -65,7 +65,7 @@ struct MovieDetailView: View {
                     // Overview
                     if !movie.overview.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Overview")
+                            Text("movie_detail.overview".localized())
                                 .font(.headline)
                             Text(movie.overview)
                                 .font(.body)
@@ -174,25 +174,25 @@ struct MovieDetailView: View {
     @ViewBuilder
     private func statsSection(movie: MovieDetail) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Details")
+            Text("movie_detail.details".localized())
                 .font(.headline)
             
             VStack(alignment: .leading, spacing: 8) {
                 if let budget = movie.formattedBudget {
-                    statRow(title: "Budget", value: budget)
+                    statRow(title: "movie_detail.budget".localized(), value: budget)
                 }
                 
                 if let revenue = movie.formattedRevenue {
-                    statRow(title: "Revenue", value: revenue)
+                    statRow(title: "movie_detail.revenue".localized(), value: revenue)
                 }
                 
-                statRow(title: "Status", value: movie.status)
+                statRow(title: "movie_detail.status".localized(), value: movie.status)
                 
                 if let releaseDate = movie.releaseDate {
-                    statRow(title: "Release Date", value: releaseDate)
+                    statRow(title: "movie_detail.release_date".localized(), value: releaseDate)
                 }
                 
-                statRow(title: "Original Language", value: movie.originalLanguage.uppercased())
+                statRow(title: "movie_detail.original_language".localized(), value: movie.originalLanguage.uppercased())
             }
         }
     }
@@ -212,7 +212,7 @@ struct MovieDetailView: View {
     @ViewBuilder
     private func genresSection(movie: MovieDetail) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Genres")
+            Text("movie_detail.genres".localized())
                 .font(.headline)
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -234,7 +234,7 @@ struct MovieDetailView: View {
     @ViewBuilder
     private func productionCompaniesSection(movie: MovieDetail) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Production Companies")
+            Text("movie_detail.production_companies".localized())
                 .font(.headline)
             
             VStack(alignment: .leading, spacing: 8) {

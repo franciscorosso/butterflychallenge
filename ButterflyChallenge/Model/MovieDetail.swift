@@ -47,9 +47,9 @@ struct MovieDetail: Codable, Identifiable {
         let hours = runtime / 60
         let minutes = runtime % 60
         if hours > 0 {
-            return "\(hours)h \(minutes)m"
+            return "movie_detail.runtime.hours_minutes".localized(with: [String(hours), String(minutes)])
         } else {
-            return "\(minutes)m"
+            return "movie_detail.runtime.minutes".localized(with: minutes)
         }
     }
     
