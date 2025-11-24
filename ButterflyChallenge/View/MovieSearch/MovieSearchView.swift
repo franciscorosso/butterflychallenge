@@ -77,7 +77,7 @@ struct MovieSearchView: View {
                         } label: {
                             Label(
                                 viewModel.isFavorite(movieId: movie.id) ? "favorites.remove".localized() : "favorites.add".localized(),
-                                systemImage: viewModel.isFavorite(movieId: movie.id) ? "heart.fill" : "heart"
+                                systemImage: viewModel.isFavorite(movieId: movie.id) ? "heart.fill" : "heart.slash.fill"
                             )
                         }
                         .tint(viewModel.isFavorite(movieId: movie.id) ? .pink : .blue)

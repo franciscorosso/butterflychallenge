@@ -16,13 +16,13 @@ protocol GetFavoritesUseCase {
 // MARK: - Implementation
 
 final class GetFavoritesUseCaseImpl: GetFavoritesUseCase {
-    private let favoritesDataSource: FavoritesDataSource
+    private let repository: FavoritesRepository
     
-    init(favoritesDataSource: FavoritesDataSource) {
-        self.favoritesDataSource = favoritesDataSource
+    init(repository: FavoritesRepository) {
+        self.repository = repository
     }
     
     func execute() -> [FavoriteMovie] {
-        return favoritesDataSource.getFavorites()
+        return repository.getFavorites()
     }
 }

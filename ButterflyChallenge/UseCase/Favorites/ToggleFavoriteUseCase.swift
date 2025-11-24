@@ -17,23 +17,23 @@ protocol ToggleFavoriteUseCase {
 // MARK: - Implementation
 
 final class ToggleFavoriteUseCaseImpl: ToggleFavoriteUseCase {
-    private let favoritesDataSource: FavoritesDataSource
+    private let repository: FavoritesRepository
     
-    init(favoritesDataSource: FavoritesDataSource) {
-        self.favoritesDataSource = favoritesDataSource
+    init(repository: FavoritesRepository) {
+        self.repository = repository
     }
     
     func execute(movie: FavoriteMovie) -> Bool {
         if isFavorite(movieId: movie.id) {
-            favoritesDataSource.removeFavorite(movieId: movie.id)
+            repository.removeFavorite(movieId: movie.id)
             return false
         } else {
-            favoritesDataSource.addFavorite(movie)
+            repository.addFavorite(movie)
             return true
         }
     }
     
     func isFavorite(movieId: Int) -> Bool {
-        return favoritesDataSource.isFavorite(movieId: movieId)
+        return repository.isFavorite(movieId: movieId)
     }
 }

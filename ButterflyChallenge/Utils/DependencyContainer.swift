@@ -11,9 +11,6 @@ import Swinject
 /// Dependency container for managing app dependencies using Swinject
 final class DependencyContainer {
     static let shared = DependencyContainer()
-    
-    // MARK: - Properties
-    
     private let container: Container
     private let assembler: Assembler
     

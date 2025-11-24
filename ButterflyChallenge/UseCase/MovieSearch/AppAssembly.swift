@@ -23,19 +23,24 @@ final class AppAssembly: Assembly {
         container.register(MoviesDatasource.self) { resolver in
             let accessToken = resolver.resolve(String.self, name: "APIAccessToken")!
             return MoviesRemoteDatasourceImpl(accessToken: accessToken)
-        }.inObjectScope(.container) // Singleton
+        }.inObjectScope(.container)
         
         container.register(FavoritesDataSource.self) { _ in
             return FavoritesDataSourceImpl()
-        }.inObjectScope(.container) // Singleton
+        }.inObjectScope(.container)
         
         // MARK: - Repository Layer
         
         container.register(MoviesRepository.self) { resolver in
             let datasource = resolver.resolve(MoviesDatasource.self)!
             return MoviesRepositoryImpl(remoteDatasource: datasource)
-        }.inObjectScope(.container) // Singleton
-        
+        }.inObjectScope(.container)
+
+        container.register(FavoritesRepository.self) { resolver in
+            let datasource = resolver.resolve(FavoritesDataSource.self)!
+            return FavoritesRepositoryImpl(dataSource: datasource)
+        }.inObjectScope(.container)
+
         // MARK: - Use Cases
         
         container.register(MovieSearchUseCase.self) { resolver in
@@ -49,13 +54,13 @@ final class AppAssembly: Assembly {
         }
         
         container.register(GetFavoritesUseCase.self) { resolver in
-            let dataSource = resolver.resolve(FavoritesDataSource.self)!
-            return GetFavoritesUseCaseImpl(favoritesDataSource: dataSource)
+            let repository = resolver.resolve(FavoritesRepository.self)!
+            return GetFavoritesUseCaseImpl(repository: repository)
         }
-        
+
         container.register(ToggleFavoriteUseCase.self) { resolver in
-            let dataSource = resolver.resolve(FavoritesDataSource.self)!
-            return ToggleFavoriteUseCaseImpl(favoritesDataSource: dataSource)
+            let repository = resolver.resolve(FavoritesRepository.self)!
+            return ToggleFavoriteUseCaseImpl(repository: repository)
         }
         
         // MARK: - View Models
