@@ -23,10 +23,6 @@ final class MovieSearchUseCaseImpl: MovieSearchUseCase {
     }
     
     func execute(query: String, page: Int = 1) async throws -> MovieSearchResponse {
-        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
-            throw MoviesDatasourceError.invalidURL
-        }
-        
         return try await repository.searchMovies(query: query, page: page)
     }
 }

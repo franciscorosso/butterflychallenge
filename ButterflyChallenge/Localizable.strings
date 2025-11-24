@@ -1,7 +1,7 @@
-/* 
+/*
   Localizable.strings
   ButterflyChallenge
-  
+
   Created by Francisco Rosso on 24/11/2025.
 */
 
@@ -53,4 +53,19 @@
 "error.server_error" = "Server error with status code: %d";
 "error.decoding_error" = "Failed to decode response: %@";
 "error.network_error" = "Network error: %@";
-"error.unexpected" = "An unexpected error occurred: %@";
+"error.unexpected" = "An unexpected error occurred: %@"; // kept last version
+"error.cache_unavailable" = "Cache is temporarily unavailable. Please try again."; // kept last version
+"error.no_internet_connection" = "No internet connection available.";
+
+// MARK: - Offline
+"offline.title" = "No Internet Connection";
+"offline.description" = "You're offline and we don't have cached data for this content. Please check your connection and try again.";
+"offline.retry" = "Try Again";
+"offline.hint" = "Make sure you're connected to Wi-Fi or cellular data";
+"offline.banner.title" = "You're Offline";
+"offline.banner.description" = "Showing cached data";
+"offline.no_cache.message" = "No internet connection and no cached data available for this search. Please connect to the internet to view content.";
+
+// MARK: - Network
+"network.offline.title" = "No Internet Connection";
+"network.offline.description" = "Showing cached data";

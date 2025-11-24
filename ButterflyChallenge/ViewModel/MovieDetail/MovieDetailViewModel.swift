@@ -18,6 +18,7 @@ final class MovieDetailViewModel {
     var movieDetail: MovieDetail?
     var isLoading = false
     var errorMessage: String?
+    var isOfflineError = false  // New: Track if error is due to offline
     var isFavorite = false
     
     init(movieId: Int, getMovieDetailUseCase: GetMovieDetailUseCase, toggleFavoriteUseCase: ToggleFavoriteUseCase) {
@@ -35,15 +36,20 @@ final class MovieDetailViewModel {
         
         isLoading = true
         errorMessage = nil
+        isOfflineError = false
         
         do {
             let detail = try await getMovieDetailUseCase.execute(movieId: movieId)
             movieDetail = detail
             isFavorite = toggleFavoriteUseCase.isFavorite(movieId: movieId)
+        } catch let error as MoviesRepositoryError {
+            handleRepositoryError(error)
         } catch let error as MoviesDatasourceError {
             errorMessage = error.errorDescription
+            isOfflineError = false
         } catch {
             errorMessage = "error.unexpected".localized(with: error.localizedDescription)
+            isOfflineError = false
         }
         
         isLoading = false
@@ -59,5 +65,19 @@ final class MovieDetailViewModel {
         guard let movie = movieDetail else { return }
         let favoriteMovie = FavoriteMovie(from: movie)
         isFavorite = toggleFavoriteUseCase.execute(movie: favoriteMovie)
+    }
+    
+    // MARK: - Error Handling
+    
+    @MainActor
+    private func handleRepositoryError(_ error: MoviesRepositoryError) {
+        switch error {
+        case .noInternetConnection:
+            errorMessage = "offline.no_cache.message".localized()
+            isOfflineError = true
+        case .cacheNotAvailable:
+            errorMessage = "error.cache_unavailable".localized()
+            isOfflineError = false
+        }
     }
 }

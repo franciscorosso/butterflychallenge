@@ -7,6 +7,7 @@
 
 import Foundation
 import Swinject
+import SwiftData
 
 /// Main assembly for registering all app dependencies with Swinject
 final class AppAssembly: Assembly {
@@ -18,11 +19,38 @@ final class AppAssembly: Assembly {
             "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYTY0NmJiNGRlODQwMzU1YzlhZTdiM2IwYWIxMjgyYiIsIm5iZiI6MTc2MzkzNzYzMC4wMDQ5OTk5LCJzdWIiOiI2OTIzOGQ1ZGI2OGQ0YzYzNmUwYmE5MWMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.04Gf9nPLFOLEBZaFkrzY3aeeo-NHiJJWeFTcLfsB6hw"
         }
         
+        // MARK: - SwiftData
+        
+        container.register(ModelContainer.self) { _ in
+            let schema = Schema([
+                CachedMovieEntity.self,
+                CachedMovieDetailEntity.self
+            ])
+            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+            
+            do {
+                return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            } catch {
+                fatalError("Could not create ModelContainer: \(error)")
+            }
+        }.inObjectScope(.container)
+        
+        // MARK: - Network & Monitoring
+        
+        container.register(NetworkMonitor.self) { _ in
+            return NetworkMonitorImpl()
+        }.inObjectScope(.container)
+        
         // MARK: - Datasource Layer
         
-        container.register(MoviesDatasource.self) { resolver in
+        container.register(MoviesRemoteDatasource.self) { resolver in
             let accessToken = resolver.resolve(String.self, name: "APIAccessToken")!
             return MoviesRemoteDatasourceImpl(accessToken: accessToken)
+        }.inObjectScope(.container)
+        
+        container.register(MoviesLocalDataSource.self) { resolver in
+            let modelContainer = resolver.resolve(ModelContainer.self)!
+            return MoviesLocalDataSourceSwiftDataImpl(modelContainer: modelContainer)
         }.inObjectScope(.container)
         
         container.register(FavoritesDataSource.self) { _ in
@@ -32,8 +60,14 @@ final class AppAssembly: Assembly {
         // MARK: - Repository Layer
         
         container.register(MoviesRepository.self) { resolver in
-            let datasource = resolver.resolve(MoviesDatasource.self)!
-            return MoviesRepositoryImpl(remoteDatasource: datasource)
+            let remoteDataSource = resolver.resolve(MoviesRemoteDatasource.self)!
+            let localDataSource = resolver.resolve(MoviesLocalDataSource.self)!
+            let networkMonitor = resolver.resolve(NetworkMonitor.self)!
+            return MoviesRepositoryImpl(
+                remoteDataSource: remoteDataSource,
+                localDataSource: localDataSource,
+                networkMonitor: networkMonitor
+            )
         }.inObjectScope(.container)
 
         container.register(FavoritesRepository.self) { resolver in
@@ -68,7 +102,12 @@ final class AppAssembly: Assembly {
         container.register(MovieSearchViewModel.self) { resolver in
             let searchUseCase = resolver.resolve(MovieSearchUseCase.self)!
             let toggleFavoriteUseCase = resolver.resolve(ToggleFavoriteUseCase.self)!
-            return MovieSearchViewModel(searchMoviesUseCase: searchUseCase, toggleFavoriteUseCase: toggleFavoriteUseCase)
+            let networkMonitor = resolver.resolve(NetworkMonitor.self)!
+            return MovieSearchViewModel(
+                searchMoviesUseCase: searchUseCase,
+                toggleFavoriteUseCase: toggleFavoriteUseCase,
+                networkMonitor: networkMonitor
+            )
         }
         
         container.register(FavoritesViewModel.self) { resolver in
@@ -76,8 +115,7 @@ final class AppAssembly: Assembly {
             let toggleFavoriteUseCase = resolver.resolve(ToggleFavoriteUseCase.self)!
             return FavoritesViewModel(getFavoritesUseCase: getFavoritesUseCase, toggleFavoriteUseCase: toggleFavoriteUseCase)
         }
-        
-        // Factory for MovieDetailViewModel since it requires a parameter
+
         container.register(MovieDetailViewModel.self) { (resolver, movieId: Int) in
             let getMovieDetailUseCase = resolver.resolve(GetMovieDetailUseCase.self)!
             let toggleFavoriteUseCase = resolver.resolve(ToggleFavoriteUseCase.self)!

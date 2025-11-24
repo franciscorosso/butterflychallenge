@@ -16,10 +16,20 @@ struct MovieSearchView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
+                NetworkStatusBanner(isConnected: viewModel.isConnected)
+                    .animation(.spring(duration: 0.3), value: viewModel.isConnected)
+                
                 if viewModel.isLoading {
                     ProgressView("movie_search.searching".localized())
                         .padding()
+                } else if viewModel.isOfflineError {
+                    OfflineStateView(
+                        message: viewModel.errorMessage,
+                        retryAction: {
+                            await viewModel.searchMovies()
+                        }
+                    )
                 } else if let errorMessage = viewModel.errorMessage {
                     ContentUnavailableView(
                         "general.error".localized(),
@@ -43,14 +53,13 @@ struct MovieSearchView: View {
                 text: $viewModel.searchQuery,
                 prompt: "movie_search.search_prompt".localized()
             )
-            .onChange(of: viewModel.searchQuery) {
-                Task {
-                    await viewModel.searchMovies()
-                }
-            }
             .onChange(of: viewModel.searchQuery) { oldValue, newValue in
-                if newValue.isEmpty {
+                if newValue.isEmpty && viewModel.isConnected {
                     viewModel.clearSearch()
+                } else {
+                    Task {
+                        await viewModel.searchMovies()
+                    }
                 }
             }
         }
@@ -64,7 +73,7 @@ struct MovieSearchView: View {
                         MovieRowView(movie: movie)
                             .onAppear {
                                 Task {
-                                    await viewModel.loadMoreMoviesIfNeeded(movie)
+                                    await viewModel.loadMoreMovies(lastMovie: movie)
                                 }
                             }
                     }
@@ -77,7 +86,7 @@ struct MovieSearchView: View {
                         } label: {
                             Label(
                                 viewModel.isFavorite(movieId: movie.id) ? "favorites.remove".localized() : "favorites.add".localized(),
-                                systemImage: viewModel.isFavorite(movieId: movie.id) ? "heart.fill" : "heart.slash.fill"
+                                systemImage: viewModel.isFavorite(movieId: movie.id) ? "heart.slash.fill" : "heart.fill"
                             )
                         }
                         .tint(viewModel.isFavorite(movieId: movie.id) ? .pink : .blue)
@@ -93,17 +102,7 @@ struct MovieSearchView: View {
                     }
                 }
             } header: {
-                if viewModel.totalResults > 0 {
-                    Text("movie_search.results_count".localized(with: viewModel.totalResults))
-                }
-            } footer: {
-                if viewModel.currentPage == viewModel.totalPages && viewModel.totalPages > 0 {
-                    Text("movie_search.end_of_results".localized())
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top, 8)
-                }
+                Text("movie_search.results_count".localized(with: viewModel.totalResults))
             }
         }
         .navigationDestination(for: Int.self) { movieId in

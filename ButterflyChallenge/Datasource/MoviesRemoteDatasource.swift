@@ -9,14 +9,14 @@ import Foundation
 
 // MARK: - Protocol
 
-protocol MoviesDatasource {
+protocol MoviesRemoteDatasource {
     func searchMovies(query: String, page: Int) async throws -> MovieSearchResponse
     func getMovieDetail(movieId: Int) async throws -> MovieDetail
 }
 
 // MARK: - Implementation
 
-final class MoviesRemoteDatasourceImpl: MoviesDatasource {
+final class MoviesRemoteDatasourceImpl: MoviesRemoteDatasource {
     private let accessToken: String
     private let session: URLSession
     

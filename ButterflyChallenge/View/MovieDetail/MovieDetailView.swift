@@ -18,6 +18,13 @@ struct MovieDetailView: View {
         ZStack {
             if viewModel.isLoading {
                 ProgressView("general.loading".localized())
+            } else if viewModel.isOfflineError {
+                OfflineStateView(
+                    message: viewModel.errorMessage,
+                    retryAction: {
+                        await viewModel.retry()
+                    }
+                )
             } else if let errorMessage = viewModel.errorMessage {
                 ContentUnavailableView(
                     "general.error".localized(),

@@ -14,31 +14,49 @@ final class MovieSearchViewModel {
     private let toggleFavoriteUseCase: ToggleFavoriteUseCase
     private var searchTask: Task<Void, Never>?
     private var loadMoreTask: Task<Void, Never>?
-    
+    private var networkMonitor: NetworkMonitor
+
+    @ObservationIgnored var totalPages: Int = 0
+    @ObservationIgnored var currentPage: Int = 0
     var movies: [Movie] = []
     var searchQuery: String = ""
     var isLoading: Bool = false
     var isLoadingMore: Bool = false
     var errorMessage: String?
-    var currentPage: Int = 0
-    var totalPages: Int = 0
+    var isOfflineError: Bool = false
     var totalResults: Int = 0
     var favoritesVersion: Int = 0
+
+    var isConnected: Bool {
+        networkMonitor.isConnected
+    }
+    
     var canLoadMore: Bool {
-        currentPage < totalPages && !isLoading && !isLoadingMore
+        currentPage < totalPages && !isLoading && !isLoadingMore && isConnected
     }
 
-    init(searchMoviesUseCase: MovieSearchUseCase, toggleFavoriteUseCase: ToggleFavoriteUseCase) {
+    init(
+        searchMoviesUseCase: MovieSearchUseCase,
+        toggleFavoriteUseCase: ToggleFavoriteUseCase,
+        networkMonitor: NetworkMonitor
+    ) {
         self.searchMoviesUseCase = searchMoviesUseCase
         self.toggleFavoriteUseCase = toggleFavoriteUseCase
-        
-        // Listen for favorite changes from other view models
+        self.networkMonitor = networkMonitor
+
         NotificationCenter.default.addObserver(
             forName: .favoritesDidChange,
             object: nil,
             queue: .main
         ) { [weak self] _ in
             self?.favoritesVersion += 1
+        }
+        
+        // Load cached movies on init if offline
+        Task { @MainActor in
+            if !networkMonitor.isConnected {
+                await searchMovies()
+            }
         }
     }
     
@@ -58,12 +76,6 @@ final class MovieSearchViewModel {
     @MainActor
     func searchMovies() async {
         searchTask?.cancel()
-        
-        guard !searchQuery.isEmpty else {
-            movies = []
-            errorMessage = nil
-            return
-        }
 
         searchTask = Task {
             try? await Task.sleep(for: .milliseconds(500)) // Debounce the search for 0.5 seconds.
@@ -72,6 +84,7 @@ final class MovieSearchViewModel {
             
             isLoading = true
             errorMessage = nil
+            isOfflineError = false
             
             do {
                 let response = try await searchMoviesUseCase.execute(query: searchQuery, page: 1)
@@ -82,11 +95,15 @@ final class MovieSearchViewModel {
                 }
                 
                 applySearchResponse(response)
+            } catch let error as MoviesRepositoryError {
+                handleRepositoryError(error)
             } catch let error as MoviesDatasourceError {
                 errorMessage = error.errorDescription
+                isOfflineError = false
                 movies = []
             } catch {
                 errorMessage = "error.unexpected".localized(with: error.localizedDescription)
+                isOfflineError = false
                 movies = []
             }
             
@@ -103,28 +120,23 @@ final class MovieSearchViewModel {
         searchQuery = ""
         movies = []
         errorMessage = nil
+        isOfflineError = false
         currentPage = 0
         totalPages = 0
         totalResults = 0
         isLoading = false
         isLoadingMore = false
     }
-    
-    @MainActor
-    func loadMoreMoviesIfNeeded(_ movie: Movie) async {
-        guard movie.id == movies.last?.id else { return }
-        await loadMoreMovies()
-    }
 
     @MainActor
-    private func loadMoreMovies() async {
+    func loadMoreMovies(lastMovie: Movie) async {
         guard canLoadMore else { return }
-        
-        // Prevent multiple simultaneous load more requests
+        guard lastMovie.id == movies.last?.id else { return }
         guard loadMoreTask == nil || loadMoreTask?.isCancelled == true else { return }
         
         isLoadingMore = true
         errorMessage = nil
+        isOfflineError = false
         
         loadMoreTask = Task {
             defer { loadMoreTask = nil }
@@ -137,12 +149,16 @@ final class MovieSearchViewModel {
                     isLoadingMore = false
                     return
                 }
-                
+
                 applySearchResponse(response)
+            } catch let error as MoviesRepositoryError {
+                handleRepositoryError(error)
             } catch let error as MoviesDatasourceError {
                 errorMessage = error.errorDescription
+                isOfflineError = false
             } catch {
                 errorMessage = "error.unexpected".localized(with: error.localizedDescription)
+                isOfflineError = false
             }
             
             isLoadingMore = false
@@ -160,5 +176,23 @@ final class MovieSearchViewModel {
         currentPage = response.page
         totalPages = response.totalPages
         totalResults = response.totalResults
+        errorMessage = nil
+        isOfflineError = false
+    }
+    
+    // MARK: - Error Handling
+    
+    @MainActor
+    private func handleRepositoryError(_ error: MoviesRepositoryError) {
+        switch error {
+        case .noInternetConnection:
+            errorMessage = "offline.no_cache.message".localized()
+            isOfflineError = true
+            movies = []
+        case .cacheNotAvailable:
+            errorMessage = "error.cache_unavailable".localized()
+            isOfflineError = false
+            movies = []
+        }
     }
 }
