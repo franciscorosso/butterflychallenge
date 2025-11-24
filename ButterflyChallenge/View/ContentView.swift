@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Security
 
 struct ContentView: View {
     let searchViewModel: MovieSearchViewModel
@@ -29,8 +30,4 @@ struct ContentView: View {
                 }
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

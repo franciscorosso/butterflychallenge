@@ -13,11 +13,6 @@ import SwiftData
 final class AppAssembly: Assembly {
     
     func assemble(container: Container) {
-        // MARK: - Configuration
-        
-        container.register(String.self, name: "APIAccessToken") { _ in
-            "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYTY0NmJiNGRlODQwMzU1YzlhZTdiM2IwYWIxMjgyYiIsIm5iZiI6MTc2MzkzNzYzMC4wMDQ5OTk5LCJzdWIiOiI2OTIzOGQ1ZGI2OGQ0YzYzNmUwYmE5MWMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.04Gf9nPLFOLEBZaFkrzY3aeeo-NHiJJWeFTcLfsB6hw"
-        }
         
         // MARK: - SwiftData
         
@@ -44,13 +39,12 @@ final class AppAssembly: Assembly {
         // MARK: - Datasource Layer
         
         container.register(MoviesRemoteDatasource.self) { resolver in
-            let accessToken = resolver.resolve(String.self, name: "APIAccessToken")!
-            return MoviesRemoteDatasourceImpl(accessToken: accessToken)
+            return MoviesRemoteDatasourceImpl(accessToken: SecretsManager.apiAccessToken ?? "")
         }.inObjectScope(.container)
         
         container.register(MoviesLocalDataSource.self) { resolver in
             let modelContainer = resolver.resolve(ModelContainer.self)!
-            return MoviesLocalDataSourceSwiftDataImpl(modelContainer: modelContainer)
+            return MoviesLocalDataSourceImpl(modelContainer: modelContainer)
         }.inObjectScope(.container)
         
         container.register(FavoritesDataSource.self) { _ in
