@@ -148,6 +148,7 @@ ButterflyChallenge/
 - **Swinject**: Dependency injection container
 - **Network Framework**: Real-time network connectivity monitoring
 - **Swift Testing**: Modern testing framework with macros
+- **ViewInspector**: Library for unit testing SwiftUI views. It allows for traversing a view hierarchy at runtime providing direct access to the underlying View structs.
 
 ## Technical Highlights
 
@@ -177,6 +178,9 @@ Comprehensive error handling:
 - Repository errors (network, cache)
 - API errors (HTTP status codes)
 - User-friendly error messages with localization
+
+### Challenges faced
+- ViewInspector doesn’t fully integrate with the modern Swift Testing framework, so using XCTest-based assertions was the most reliable approach.
 
 ## Setup Instructions
 
@@ -270,9 +274,10 @@ This project is created as a coding challenge.
 
 ## Acknowledgments
 
-- [The Movie Database (TMDB)](https://www.themoviedb.org/) for the API
-- [Swinject](https://github.com/Swinject/Swinject) for dependency injection
-- Apple's Swift and SwiftUI teams for amazing frameworks
+- [The Movie Database (TMDB)](https://www.themoviedb.org/) for the API.
+- [Swinject](https://github.com/Swinject/Swinject) for dependency injection.
+- [ViewInspector](https://github.com/nalexn/ViewInspector) for UI tests.
+- Apple's Swift and SwiftUI teams for amazing frameworks.
 
 ## Contact
 
