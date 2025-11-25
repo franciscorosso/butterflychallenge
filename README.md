@@ -1,4 +1,4 @@
-<img width="621" height="1344" alt="Captura de pantalla 2025-11-24 a la(s) 22 27 21" src="https://github.com/user-attachments/assets/cc6b7e27-cb7f-42d7-8357-6f0216eb4ae2" /># ButterflyChallenge 🎬
+# ButterflyChallenge 🎬
 
 An iOS movie discovery app built with SwiftUI that allows users to search for movies, view detailed information, and manage their favorite films. The app demonstrates clean architecture principles, offline-first functionality, and comprehensive testing.
 
