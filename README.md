@@ -1,4 +1,4 @@
-# ButterflyChallenge 🎬
+<img width="621" height="1344" alt="Captura de pantalla 2025-11-24 a la(s) 22 27 21" src="https://github.com/user-attachments/assets/cc6b7e27-cb7f-42d7-8357-6f0216eb4ae2" /># ButterflyChallenge 🎬
 
 An iOS movie discovery app built with SwiftUI that allows users to search for movies, view detailed information, and manage their favorite films. The app demonstrates clean architecture principles, offline-first functionality, and comprehensive testing.
 
@@ -273,7 +273,7 @@ The app uses The Movie Database (TMDB) API v3:
 <img width="435" height="847" alt="Captura de pantalla 2025-11-24 a la(s) 22 23 29" src="https://github.com/user-attachments/assets/ab12a0dd-496f-4774-a66c-2bd84fbda98f" />
 <img width="435" height="847" alt="Captura de pantalla 2025-11-24 a la(s) 22 23 24" src="https://github.com/user-attachments/assets/32aad580-7cc0-4336-af85-8f32b2e6aa64" />
 <img width="435" height="847" alt="Captura de pantalla 2025-11-24 a la(s) 22 23 18" src="https://github.com/user-attachments/assets/9346f490-fa67-41a6-b291-542464bdd58b" />
-<img width="435" height="847" alt="Captura de pantalla 2025-11-24 a la(s) 22 27 21" src="https://github.com/user-attachments/assets/46096513-0de2-4828-9f10-9acf0c0b324c" />
+<img width="414" height="896" alt="Captura de pantalla 2025-11-24 a la(s) 22 27 21" src="https://github.com/user-attachments/assets/62c746be-2cdb-4bc1-9536-84a851d9ed64" />
 
 ## License
 
