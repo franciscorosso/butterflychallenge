@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25BA7BB02ED525BC004027A0 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 25BA7BAF2ED525BC004027A0 /* ViewInspector */; };
 		25C45D782ED4B0B20012F463 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 25C45D772ED4B0B20012F463 /* Swinject */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25BA7BB02ED525BC004027A0 /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +151,7 @@
 			);
 			name = ButterflyChallengeTests;
 			packageProductDependencies = (
+				25BA7BAF2ED525BC004027A0 /* ViewInspector */,
 			);
 			productName = ButterflyChallengeTests;
 			productReference = 2571AF122ED47BAF00318915 /* ButterflyChallengeTests.xctest */;
@@ -192,6 +195,7 @@
 					};
 					2571AF112ED47BAF00318915 = {
 						CreatedOnToolsVersion = 26.1.1;
+						LastSwiftMigration = 2610;
 						TestTargetID = 2571AF042ED47BAE00318915;
 					};
 					2571AF1B2ED47BAF00318915 = {
@@ -211,6 +215,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2571AF612ED47EB900318915 /* XCRemoteSwiftPackageReference "Swinject" */,
+				25BA7BAE2ED525BC004027A0 /* XCRemoteSwiftPackageReference "ViewInspector" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2571AF062ED47BAE00318915 /* Products */;
@@ -339,7 +344,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -397,7 +402,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -475,6 +480,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 37ZSDQP6HL;
@@ -486,6 +492,7 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -497,6 +504,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 37ZSDQP6HL;
@@ -605,9 +613,22 @@
 				minimumVersion = 2.10.0;
 			};
 		};
+		25BA7BAE2ED525BC004027A0 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nalexn/ViewInspector.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		25BA7BAF2ED525BC004027A0 /* ViewInspector */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 25BA7BAE2ED525BC004027A0 /* XCRemoteSwiftPackageReference "ViewInspector" */;
+			productName = ViewInspector;
+		};
 		25C45D772ED4B0B20012F463 /* Swinject */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2571AF612ED47EB900318915 /* XCRemoteSwiftPackageReference "Swinject" */;

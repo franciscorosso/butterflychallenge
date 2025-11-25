@@ -20,10 +20,8 @@ final class FavoritesViewModel {
         toggleFavoriteUseCase: ToggleFavoriteUseCase) {
         self.getFavoritesUseCase = getFavoritesUseCase
         self.toggleFavoriteUseCase = toggleFavoriteUseCase
-        
-        loadFavorites()
     }
-    
+
     @MainActor
     func loadFavorites() {
         isLoading = true

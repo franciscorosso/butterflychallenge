@@ -18,10 +18,12 @@ final class MovieDetailViewModel {
     var movieDetail: MovieDetail?
     var isLoading = false
     var errorMessage: String?
-    var isOfflineError = false  // New: Track if error is due to offline
+    var isOfflineError = false
     var isFavorite = false
     
-    init(movieId: Int, getMovieDetailUseCase: GetMovieDetailUseCase, toggleFavoriteUseCase: ToggleFavoriteUseCase) {
+    init(movieId: Int,
+         getMovieDetailUseCase: GetMovieDetailUseCase,
+         toggleFavoriteUseCase: ToggleFavoriteUseCase) {
         self.movieId = movieId
         self.getMovieDetailUseCase = getMovieDetailUseCase
         self.toggleFavoriteUseCase = toggleFavoriteUseCase
