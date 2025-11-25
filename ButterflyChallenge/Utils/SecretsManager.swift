@@ -12,7 +12,7 @@ enum SecretsManager {
         guard let url = Bundle.main.url(forResource: "Secrets", withExtension: "plist"),
               let data = try? Data(contentsOf: url),
               let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else {
-            print(">>> Warning: Secrets.plist not found or could not be loaded")
+            debugPrint(">>> Warning: Secrets.plist not found or could not be loaded")
             return nil
         }
         return plist
