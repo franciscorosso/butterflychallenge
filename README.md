@@ -209,7 +209,7 @@ Comprehensive error handling:
      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
      <plist version="1.0">
      <dict>
-         <key>TMDB_API_KEY</key>
+         <key>APIAccessToken</key>
          <string>ADD_TOKEN</string>
      </dict>
      </plist>
