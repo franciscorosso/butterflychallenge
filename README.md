@@ -273,7 +273,7 @@ The app uses The Movie Database (TMDB) API v3:
 <img width="435" height="847" alt="Captura de pantalla 2025-11-24 a la(s) 22 23 29" src="https://github.com/user-attachments/assets/ab12a0dd-496f-4774-a66c-2bd84fbda98f" />
 <img width="435" height="847" alt="Captura de pantalla 2025-11-24 a la(s) 22 23 24" src="https://github.com/user-attachments/assets/32aad580-7cc0-4336-af85-8f32b2e6aa64" />
 <img width="435" height="847" alt="Captura de pantalla 2025-11-24 a la(s) 22 23 18" src="https://github.com/user-attachments/assets/9346f490-fa67-41a6-b291-542464bdd58b" />
-<img width="621" height="1344" alt="Captura de pantalla 2025-11-24 a la(s) 22 27 21" src="https://github.com/user-attachments/assets/46096513-0de2-4828-9f10-9acf0c0b324c" />
+<img width="435" height="847" alt="Captura de pantalla 2025-11-24 a la(s) 22 27 21" src="https://github.com/user-attachments/assets/46096513-0de2-4828-9f10-9acf0c0b324c" />
 
 ## License
 
